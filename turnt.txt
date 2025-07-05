@@ -1,0 +1,392 @@
+#
+# File insertion tool for Bitcoin
+# Requires git://github.com/jgarzik/python-bitcoinrpc.git
+#
+# (c) 2013 Satoshi Nakamoto All Rights Reserved
+#
+# UNAUTHORIZED DUPLICATION AND/OR USAGE OF THIS PROGRAM IS PROHIBITED BY US AND INTERNATIONAL COPYRIGHT LAW
+
+import io
+import jsonrpc
+import os
+import random
+import struct
+import sys
+from binascii import crc32,hexlify,unhexlify
+from decimal import Decimal
+
+if len(sys.argv) < 5:
+    print(\
+"""\
+Usage: %s <file> <dest addr> <dest amount> {<fee-per-kb>}
+Set BTCRPCURL=http://user:pass@localhost:portnum""" % sys.argv[0], file=sys.stderr)
+    sys.exit()
+
+COIN = 100000000
+
+def unhexstr(str):
+    return unhexlify(str.encode('utf8'))
+
+proxy = jsonrpc.ServiceProxy(os.environ['BTCRPCURL'])
+
+def select_txins(value):
+    unspent = list(proxy.listunspent())
+    random.shuffle(unspent)
+
+    r = []
+    total = 0
+    for tx in unspent:
+        total += tx['amount']
+        r.append(tx)
+
+        if total >= value:
+            break
+
+    if total < value:
+        return None
+    else:
+        return (r, total)
+
+def varint(n):
+    if n < 0xfd:
+        return bytes([n])
+    elif n < 0xffff:
+        return b'\xfd' + struct.pack('<H',n)
+    else:
+        assert False
+
+def packtxin(prevout, scriptSig, seq=0xffffffff):
+    return prevout[0][::-1] + struct.pack('<L',prevout[1]) + varint(len(scriptSig)) + scriptSig + struct.pack('<L', seq)
+
+def packtxout(value, scriptPubKey):
+    return struct.pack('<Q',int(value*COIN)) + varint(len(scriptPubKey)) + scriptPubKey
+
+def packtx(txins, txouts, locktime=0):
+    r = b'\x01\x00\x00\x00' # version
+    r += varint(len(txins))
+
+    for txin in txins:
+        r += packtxin((unhexstr(txin['txid']),txin['vout']), b'')
+
+    r += varint(len(txouts))
+
+    for (value, scriptPubKey) in txouts:
+        r += packtxout(value, scriptPubKey)
+
+    r += struct.pack('<L', locktime)
+    return r
+
+OP_CHECKSIG = b'\xac'
+OP_CHECKMULTISIG = b'\xae'
+OP_PUSHDATA1 = b'\x4c'
+OP_DUP = b'\x76'
+OP_HASH160 = b'\xa9'
+OP_EQUALVERIFY = b'\x88'
+def pushdata(data):
+    assert len(data) < OP_PUSHDATA1[0]
+    return bytes([len(data)]) + data
+
+def pushint(n):
+    assert 0 < n <= 16
+    return bytes([0x51 + n-1])
+
+
+def addr2bytes(s):
+    digits58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
+    n = 0
+    for c in s:
+        n *= 58
+        if c not in digits58:
+            raise ValueError
+        n += digits58.index(c)
+
+    h = '%x' % n
+    if len(h) % 2:
+        h = '0' + h
+
+    for c in s:
+        if c == digits58[0]:
+            h = '00' + h
+        else:
+            break
+    return unhexstr(h)[1:-4] # skip version and checksum
+
+def checkmultisig_scriptPubKey_dump(fd):
+    data = fd.read(65*3)
+    if not data:
+        return None
+
+    r = pushint(1)
+
+    n = 0
+    while data:
+        chunk = data[0:65]
+        data = data[65:]
+
+        if len(chunk) < 33:
+            chunk += b'\x00'*(33-len(chunk))
+        elif len(chunk) < 65:
+            chunk += b'\x00'*(65-len(chunk))
+
+        r += pushdata(chunk)
+        n += 1
+
+    r += pushint(n) + OP_CHECKMULTISIG
+    return r
+
+
+(txins, change) = select_txins(0)
+
+txouts = []
+
+data = open(sys.argv[1],'rb').read()
+data = struct.pack('<L', len(data)) + struct.pack('<L', crc32(data)) + data
+fd = io.BytesIO(data)
+
+while True:
+    scriptPubKey = checkmultisig_scriptPubKey_dump(fd)
+
+    if scriptPubKey is None:
+        break
+
+    value = Decimal(1/COIN)
+    txouts.append((value, scriptPubKey))
+
+    change -= value
+
+# dest output
+out_value = Decimal(sys.argv[3])
+change -= out_value
+txouts.append((out_value, OP_DUP + OP_HASH160 + pushdata(addr2bytes(sys.argv[2])) + OP_EQUALVERIFY + OP_CHECKSIG))
+
+# change output
+change_addr = proxy.getnewaddress()
+txouts.append([change, OP_DUP + OP_HASH160 + pushdata(addr2bytes(change_addr)) + OP_EQUALVERIFY + OP_CHECKSIG])
+
+tx = packtx(txins, txouts)
+signed_tx = proxy.signrawtransaction(hexlify(tx).decode('utf8'))
+
+FEEPERKB = Decimal(0.001)
+try:
+    FEEPERKB = Decimal(sys.argv[4])
+except IndexError:
+    pass
+fee = Decimal(len(signed_tx['hex'])/1000) * FEEPERKB
+change -= fee
+txouts[-1][0] = change
+
+tx = packtx(txins, txouts)
+signed_tx = proxy.signrawtransaction(hexlify(tx).decode('utf8'))
+assert signed_tx['complete']
+
+print('Size: %d  Fee: %2.8f' % (len(signed_tx['hex'])/2,fee),file=sys.stderr)
+
+if False:
+    print(proxy.sendrawtransaction(signed_tx['hex']))
+else:
+    print(signed_tx)
+
+#
+# File downloader
+# Requires git://github.com/jgarzik/python-bitcoinrpc.git
+#
+# (c) 2013 Satoshi Nakamoto All Rights Reserved
+#
+# UNAUTHORIZED DUPLICATION AND/OR USAGE OF THIS PROGRAM IS PROHIBITED BY US AND INTERNATIONAL COPYRIGHT LAW
+
+import sys
+import os
+import jsonrpc
+import struct
+from binascii import crc32,hexlify,unhexlify
+
+
+if len(sys.argv) != 2:
+    print("""\
+Usage: %s <txhash>
+Set BTCRPCURL=http://user:pass@localhost:portnum""" % sys.argv[0], file=sys.stderr)
+    sys.exit()
+
+proxy = jsonrpc.ServiceProxy(os.environ['BTCRPCURL'])
+
+txid = sys.argv[1]
+
+tx = proxy.getrawtransaction(txid,1)
+
+data = b''
+for txout in tx['vout'][0:-2]:
+    for op in txout['scriptPubKey']['asm'].split(' '):
+        if not op.startswith('OP_') and len(op) >= 40:
+            data += unhexlify(op.encode('utf8'))
+
+length = struct.unpack('<L', data[0:4])[0]
+checksum = struct.unpack('<L', data[4:8])[0]
+data = data[8:8+length]
+
+if checksum != crc32(data):
+    print('Checksum mismatch; expected %d but calculated %d' % (checksum, crc32(data)),
+          file=sys.stderr)
+    sys.exit()
+
+sys.stdout.buffer.write(data)
+
+From a3a61fef43309b9fb23225df7910b03afc5465b9 Mon Sep 17 00:00:00 2001
+From: Satoshi Nakamoto <satoshin@gmx.com>
+Date: Mon, 12 Aug 2013 02:28:02 -0200
+Subject:[PATCH] Remove (SINGLE|DOUBLE)BYTE
+
+I removed this from Bitcoin in f1e1fb4bdef878c8fc1564fa418d44e7541a7e83
+in Sept 7 2010, almost three years ago. Be warned that I have not
+actually tested this patch.
+---
+ backends/bitcoind/deserialize.py |    8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/backends/bitcoind/deserialize.py b/backends/bitcoind/deserialize.py
+index 6620583..89b9b1b 100644
+--- a/backends/bitcoind/deserialize.py
++++ b/backends/bitcoind/deserialize.py
+@@ -280,10 +280,8 @@ opcodes = Enumeration("Opcodes", [
+     "OP_WITHIN", "OP_RIPEMD160", "OP_SHA1", "OP_SHA256", "OP_HASH160",
+     "OP_HASH256", "OP_CODESEPARATOR", "OP_CHECKSIG", "OP_CHECKSIGVERIFY", "OP_CHECKMULTISIG",
+     "OP_CHECKMULTISIGVERIFY",
+-    ("OP_SINGLEBYTE_END", 0xF0),
+-    ("OP_DOUBLEBYTE_BEGIN", 0xF000),
+     "OP_PUBKEY", "OP_PUBKEYHASH",
+-    ("OP_INVALIDOPCODE", 0xFFFF),
++    ("OP_INVALIDOPCODE", 0xFF),
+ ])
+
+
+@@ -293,10 +291,6 @@ def script_GetOp(bytes):
+         vch = None
+         opcode = ord(bytes[i])
+         i += 1
+-        if opcode >= opcodes.OP_SINGLEBYTE_END and i < len(bytes):
+-            opcode <<= 8
+-            opcode |= ord(bytes[i])
+-            i += 1
+
+         if opcode <= opcodes.OP_PUSHDATA4:
+             nSize = opcode
+--
+1.7.9.4
+
+j
+"hmwyda" - how much would you donate anonymously
+
+how to create ownerless BTC/BCH/BSV address with special meaning
+
+amnesia@amnesia:~$
+amnesia@amnesia:~$ wget --quiet https://github.com/libbitcoin/libbitcoin-explorer/releases/download/v3.2.0/bx-linux-x64-qrcode
+amnesia@amnesia:~$ wget --quiet https://github.com/sipa/bech32/raw/master/ref/python/segwit_addr.py
+amnesia@amnesia:~$ wget --quiet https://github.com/oskyk/cashaddress/archive/1.0.5.tar.gz
+amnesia@amnesia:~$ ls -l bx-linux-x64-qrcode segwit_addr.py 1.0.5.tar.gz
+-rw-r--r-- 1 amnesia amnesia    6494 Aug 12 14:14 1.0.5.tar.gz
+-rw-r--r-- 1 amnesia amnesia 5037768 May 26  2017 bx-linux-x64-qrcode
+-rw-r--r-- 1 amnesia amnesia    4376 Aug 12 14:13 segwit_addr.py
+amnesia@amnesia:~$ tar xf 1.0.5.tar.gz
+amnesia@amnesia:~$ chmod +x bx-linux-x64-qrcode
+amnesia@amnesia:~$ alias bx=/home/amnesia/bx-linux-x64-qrcode
+amnesia@amnesia:~$
+
+1) Base58 address is valid for all BTC/BCH/BSV
+
+1.1) base58 address from text
+amnesia@amnesia:~$
+amnesia@amnesia:~$ bx base16-encode "send 1% of how much you'd donate for publishing in blockchain diy manual for building smart rocket" | bx ripemd160 | bx address-encode
+1JYmhqs4812R5Me7fHUNo8dfczZwjy8H2d
+amnesia@amnesia:~$
+
+1.2) base58 address with text
+base58 alphabet = digits excluding "0" + lowercase letters excluding "l" + uppercase letters excluding "I", "O"
+string of 33 letters, starts with "1", last 6 or 7 will be changed, 25 or 26 remain for text
+amnesia@amnesia:~$
+amnesia@amnesia:~$ bx base58-decode 1PrcntHmwydaForKiLLBadGuyxxxxxxxx
+00045291c56c3df0faa7d508d17660766187ba423f148ff711
+amnesia@amnesia:~$
+remove 2 first and 8 last and
+amnesia@amnesia:~$
+amnesia@amnesia:~$ bx address-encode 045291c56c3df0faa7d508d17660766187ba423f
+1PrcntHmwydaForKiLLBadGuyxxys6ULy
+amnesia@amnesia:~$
+
+2) BTC SegWit address (bech32)
+
+2.1) segwit address from text
+amnesia@amnesia:~$
+amnesia@amnesia:~$ bx base16-encode '0.001 hmwyda for publishing private information about bad guy' | bx ripemd160
+f7ba9ada06c834560e439cfb3b5c054db132914d
+amnesia@amnesia:~$
+amnesia@amnesia:~$ python3
+>>>
+>>> from segwit_addr import encode
+>>>
+>>> print(encode('bc', 0, bytearray.fromhex('f7ba9ada06c834560e439cfb3b5c054db132914d')))
+bc1q77af4ksxeq69vrjrnnankhq9fkcn9y2d7h0q3z
+>>>
+
+2.2) segwit address with text
+bech32 alphabet = digits excluding "1" + lowercase letters excluding "b", "i", "o"
+string of 32 or 51 letters
+>>>
+>>> from segwit_addr import CHARSET, convertbits, encode
+>>>
+>>> array = [CHARSET.find(x) for x in 'permylhmwydasenddr0nemsgt06adguy']
+>>> print(encode('bc', 0, convertbits(array, 5, 8)))
+bc1qpermylhmwydasenddr0nemsgt06adguyrff2yz
+>>>
+>>> array = [CHARSET.find(x) for x in '0nepercnthmwydaf0rd0xyngwh0w0rkshelpspr0tects6adguy']
+>>> print(encode('bc', 0, convertbits(array, 5, 8)))
+bc1q0nepercnthmwydaf0rd0xyngwh0w0rkshelpspr0tects6adguyqc5xscz
+>>>
+>>> exit()
+amnesia@amnesia:~$
+
+3) BCH new address format (also bech32)
+
+3.1) BCH address from text - convert from 1.1
+amnesia@amnesia:~$
+amnesia@amnesia:~$ cd cashaddress-1.0.5/
+amnesia@amnesia:~/cashaddress-1.0.5$
+amnesia@amnesia:~/cashaddress-1.0.5$ python3
+>>>
+>>> from cashaddress.convert import to_cash_address
+>>>
+>>> print(to_cash_address('1JYmhqs4812R5Me7fHUNo8dfczZwjy8H2d'))
+bitcoincash:qrq8ckdda6rthkx5xf9am2qczf7avyfgfgjj6he024
+>>>
+
+3.2) BCH address with text
+bech32 alphabet see 2.2
+string of 34 letters, starts with "qq", ends with "q", 31 remain for text
+>>>
+>>> from cashaddress.crypto import b32decode, b32encode, calculate_checksum
+>>>
+>>> prefix = 'bitcoincash'
+>>> array = b32decode('qqpermylhmwydaf0r6urn6adguysh0useq')
+>>> checksum = calculate_checksum(prefix, array)
+>>> print(prefix + ':' + b32encode(array + checksum))
+bitcoincash:qqpermylhmwydaf0r6urn6adguysh0useqlcxzn0q7
+>>>
+>>> exit()
+amnesia@amnesia:~/cashaddress-1.0.5$
+
+
+舰騃舰䀃ΠĂȂ洐″₫껷ጂ淪餭ꭧ〉؊⨈䢆㷎̄。ㄻ》؉唃؄ȓ单ḱᰰ̆ѕጊ䜕潯汧⁥牔獵⁴敓癲捩獥ఱਰ̆ѕጃ圃ㅅḰഗ㔲㔰㠱㘰ㄱ㌲᝚㈍〵ㄸ〶〷〹娹ሰေะ̆ѕጃ朇浳⹧潩夰ጰ܆蘪칈Ƚ؁⨈䢆㷎ă̇B�ꅟ놧屘㳊隉裨쎠྄旑킸찡뺰摹䊘᫧鄈ꅇ꽻朢㎫묮�༕㗻⅊핤ཛྷ꠹ꌛʂきʂぉ؎唃༝āӿ̄܂むؓ唃┝ఄਰࠆثԁ܅ăర̆ᵕē！Ȅ0ᴰ̆ᵕЎЖ옔䉪凮邠䳁�ァ؟唃⌝᠄ᘰᒀ瞐㖒쑧ꣿ꧌篦胙筹鏌㣹帰ࠆثԁ܅ā刄倰✰ࠆثԁ܅İᮆ瑨灴⼺漯瀮楫朮潯⽧⽳敷⼱呢きإ⬈Ćԅ〇蘂栙瑴㩰⼯⹩歰⹩潧杯眯ㅥ挮瑲ᴰ̆ᵕБ〖舔朇浳⹧潩ং⸪獧杭椮はؓ唃”ఄਰ࠰؆腧ČĂ㘰̆ᵕП〭〯ꀫꀩ蘧栥瑴㩰⼯⹣歰⹩潧杯眯ㅥ启杚䘹㥋潺捓挮汲舰؁ਆثЁ혁ɹȄ脄ӷ眀ሀ仱봴牓葌ᤆ迃稿뗧蝢鲈ね萅⚆:Ā갻âЀえɆ!㎟駧奂ċ㸐灥瑷Ꞙ㩥꥙㇤Ⳬ骑죂䴻ℂ촀጑옘헖ꋝ�馤莌䵴礭ክ씏敭彜桴_w好ሞ磡笪愜籧ﵞ탸岇ꀔ镎릞⼃໙⺌롹 阁㯢ﶬ ̄䠀䘰ℂ꜀䕀帨檑樘쵭�ﻤ癐耡㊪㮚㩨ມ˚!滆཮轹霟꽅ꪖ�텶黋㌊፮溩팞੨♊ਰࠆ蘪칈нȃ䠃　Ʌ!놋肇櫴熣涴䏊ᗸ离ࡻ뚳蘦꾩힖툏룯 ︐⭾ꇀᐴ贅〚瀮뉚펎⃉ᶎ됟ⅸ쫸
+
+#2 3b9fae1d-93fe-4f2e-ab10-78d3c4f52784
+#3 959b09b9-267c-4585-bc87-34aae2226e35
+#4 65e5f811-bd8a-4c59-b7d4-e3d3e02a7dd1.
+#5 dbe82a2e-81df-4641-9418-1901c8298e76
+#6 4f946db0-134e-4666-9424-405053b0888f
+#7 3f68ef0b-7e7f-4a24-a538-3b1dcabe21ad
+#8 c10a4a30-c5e1-482d-a4d3-02658bf73493
+#9 778c8756-d790-4958-a6d2-bc6dba87a0bd
+#10 74dff4fd-dfbb-4cfe-8fe9-99a9732f67fd
+
+
+04f4d1bbd91e65e2a019566a17574e97dae908b784b388891848007e4f55d5a4649c73d25fc5ed8fd7227cab0be4e576c0c6404db5aa546286563e4be12bf33559
+
+
+<?xml version='1.0' encoding='UTF-8'?><Module version="4" guid="{ca09d102-cf5e-4266-ae83-30677f132773}"><TargetSecrets><TargetSecret guid="{dd8bc0ee-8b1c-4f0f-a8e8-3c59597d0a50}" label="The private Key." description="The private Key is an alphanumeric string"/><TargetSecret guid="{ac4be5a6-4a32-4734-adf0-d5bbef7ffc69}" label="The private Key location." description="The private Key can be stored locally (e.g. as environment variable). It can also be used for password/credentials management service from AWS/Azure etc."/><TargetSecret guid="{07a1e63c-6b77-4d6f-8ac4-cf427c9df58c}" label="Connection Details - username" description="If not set the username 'sa' is used"/><TargetSecret guid="{3ffb571b-e64a-4930-bc66-c73d838467ca}" label="Connection Details - password" description="Password used to log in to database"/><TargetSecret guid="{61b3629c-1de3-4b98-8d39-b9d008684144}" label="SQL command" description="Command"/></TargetSecrets><properties><property name="username" type="TargetSecretRef"><TargetSecretRef value="{07a1e63c-6b77-4d6f-8ac4-cf427c9df58c}"/></property><property name="database" type="Connection"><Connection connectionType="GenericDBConnectionManager" required="true"/></property><property name="SQL command" type="TargetSecretRef"><TargetSecretRef value="{61b3629c-1de3-4b98-8d39-b9d008684144}" required="true"/></property><property name="privatekeylocation" type="TargetSecretRef"><TargetSecretRef value="{ac4be5a6-4a32-4734-adf0-d5bbef7ffc69}" required="false"/></property><property name="key" type="TargetSecretRef"><TargetSecretRef value="{dd8bc0ee-8b1c-4f0f-a8e8-3c59597d0a50}" required="false"/></property><property name="password" type="TargetSecretRef"><TargetSecretRef value="{3ffb571b-e64a-4930-bc66-c73d838467ca}" required="true"/></property></properties><EditorSettings polygon="true"><Top><![CDATA[/* Note : Do NOT edit this script, it is written by PowerShell Universal Dashboard Editor */]]></Top></EditorSettings><function name="Invoke-SQLQuery" description="Invoke generic query (INSERT,UPDATE,DELETE)"><output description="output (depends on executed query)">PSObject</output></function><workflow version="1" requiresWorkflow="true"><endpoints/></workflow></Module>
