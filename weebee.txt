@@ -1,0 +1,42 @@
+Resources:
+
+Cloud Security Alliance (CSA), AI Governance & Compliance Resource Links Hub, https://cloudsecurityalliance.org/ai-governance-compliance-resource-links
+BethanyJep GitHub, AI for beginners, A Curriculum, https://github.com/microsoft/AI-For-Beginners
+Kumar, et.al., Failure modes in machine learning. Microsoft Learn, Microsoft, (2022, November 2), https://learn.microsoft.com/en-us/security/engineering/failure-modes-in-machine-learning
+NCSC (UK) & CISA (US), Guidelines for Secure AI Development, https://www.ncsc.gov.uk/files/Guidelines-for-secure-AI-system-development.pdf
+NCSC, The near-term impact of AI on the cyber threat, January 24, 2024, https://www.ncsc.gov.uk/report/impact-of-ai-on-cyber-threat
+CISA, 2023-2024 Roadmap for Artificial Intelligence, November 2023, https://www.cisa.gov/sites/default/files/2023-11/2023-2024_CISA-Roadmap-for-AI_508c.pdf
+CISA, Software Must Be Secure by Design, and Artificial Intelligence Is No Exception, Aug 18, 2023 https://www.cisa.gov/news-events/news/software-must-be-secure-design-and-artificial-intelligence-no-exception
+CISA, Secure by Design, https://www.cisa.gov/securebydesign
+CISA, JCDC, Government and Industry Partners Conduct AI Tabletop Exercise, https://www.cisa.gov/news-events/news/cisa-jcdc-government-and-industry-partners-conduct-ai-tabletop-exercise
+Joint Cyber Defense Collaborative (JCDC) Artificial Intelligence Cyber Tabletop Exercise, https://www.cisa.gov/topics/partnerships-and-collaboration/joint-cyber-defense-collaborative/Joint-Cyber-Defense-Collaborative-Artificial-Intelligence-Cyber-Tabletop-Exercise
+NIST Artificial Intelligence, https://www.nist.gov/artificial-intelligence
+NIST AI Risk Management Framework 1.0, https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf
+NIST Identifies Types of Cyberattacks That Manipulate Behavior of AI Systems, Jan 04, 2024, https://www.nist.gov/news-events/news/2024/01/nist-identifies-types-cyberattacks-manipulate-behavior-ai-systems
+Cloud Security Alliance (CSA), AI Safety Initiative, https://cloudsecurityalliance.org/research/working-groups/artificial-intelligence/  CSA, Security Implications of ChatGPT, Aug 2, 2023, https://cloudsecurityalliance.org/artifacts/security-implications-of-chatgpt/
+MITRE ATLAS (Adversarial Threat Landscape for Artificial-Intelligence Systems), https://atlas.mitre.org/
+Shostack, A. Threat Modeling Manifesto, https://www.threatmodelingmanifesto.org/
+Microsoft, How to approach machine learning operations, Dec 1, 2022, https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/innovate/best-practices/how-to-approach-mlops
+MLSecOps Community, MLSecOps Defined, https://mlsecops.com/what-is-mlsecops
+Protect AI, How To Use AI/ML Technology Securely with Open-Source Tools from Protect AI, Jan 23, 2024 https://protectai.com/blog/use-oss-protect-ai
+Protect AI Huntr, A beginner's guide to Bug Hunting in AI/ML Tools, https://huntr.com/get-started/intro/
+Trail of Bits, Heidy Khlaaf, Toward Comprehensive Risk Assessments and Assurance of AI-Based Systems, March 7, 2023, https://www.trailofbits.com/documents/Toward_comprehensive_risk_assessments.pdf
+RiccardoBiosas GitHub, A curated list of awesome open-source tools, resources, and tutorials for MLSecOps (Machine Learning Security Operations), https://github.com/RiccardoBiosas/awesome-MLSecOps
+Jacob-protectai GitHub, AI Exploits - a collection of exploits and scanning templates for responsibly disclosed vulnerabilities affecting machine learning tools, https://github.com/protectai/ai-exploits
+ISACA, Auditing Artificial Intelligence, 2019, https://ec.europa.eu/futurium/en/system/files/ged/auditing-artificial-intelligence.pdf![image](https://github.com/hackerron/AI-Cybersecurity/assets/59797994/dd7b62a6-8a5a-422a-8a75-6a87ddbe7b7c)
+OWASP AI Exchange, https://owaspai.org/
+-- OWASP Top 10 for LLM Applications, https://llmtop10.com/
+-- OWASP Machine Learning Top 10 (2023 ed draft), https://mltop10.info/
+-- OWASP AI Security Matrix, https://owaspai.org/docs/ai_security_overview/
+-- OWASP Project AI Security and Privacy Guide, https://github.com/OWASP/www-project-ai-security-and-privacy-guide/blob/main/owaspaiexchange.md
+ForHumanity, ForHumanity's Audit Manual 1.5, For Independent Audit of AI Systems, https://forhumanity.center/web/wp-content/uploads/2023/08/ForHumanity-IAAIS-Audit-Manual-v1.5.pdf
+IEEE, Ethically Aligned Design: A Vision for Prioritizing Human Well-being with Autonomous and Intelligent Systems, https://standards.ieee.org/wp-content/uploads/import/documents/other/ead_v2.pdf
+Partnership on AI to Benefit People and Society (PAI), https://partnershiponai.org/
+European Union (EU), A European approach to artificial intelligence , https://digital-strategy.ec.europa.eu/en/policies/european-approach-artificial-intelligence
+European Union (EU) Artificial Intelligence ACT (AI ACT), 2024, https://artificialintelligenceact.eu/the-act/
+United States White House, Executive Order on the Safe, Secure, and Trustworthy Development and Use of Artificial Intelligence, Oct 23, 2023, https://www.whitehouse.gov/briefing-room/presidential-actions/2023/10/30/executive-order-on-the-safe-secure-and-trustworthy-development-and-use-of-artificial-intelligence/
+United States White House, Fact Sheet: Biden-⁠Harris Administration Announces Key AI Actions Following President Biden’s Landmark Executive Order, Jan 29, 2024, https://www.whitehouse.gov/briefing-room/statements-releases/2024/01/29/fact-sheet-biden-harris-administration-announces-key-ai-actions-following-president-bidens-landmark-executive-order/
+IAPP - International Association of Privacy Professionals, Global AI Legislation Tracker, https://iapp.org/resources/article/global-ai-legislation-tracker/
+[Training] Kelly, D., Security Risks in AI and Machine Learning: Categorizing Attacks and Failure Modes, LinkedIn Learning, Feb 23, 2022, https://www.linkedin.com/learning/security-risks-in-ai-and-machine-learning-categorizing-attacks-and-failure-modes/
+[Book] Hutchens, J., The Language of Deception: Weaponizing Next Generation AI, (2023), Wiley, ISBN-13: 978-1394222544, https://www.amazon.com/Language-Deception-Weaponizing-Next-Generation/dp/1394222548
+[Book] Baker, P., ChatGPT for Dummies, (2023), ISBN-13: 978-1394204632

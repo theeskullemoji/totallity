@@ -1,0 +1,916 @@
+
+Ken Shirriff's blog
+Computer history, restoring vintage computers, IC reverse engineering, and whatever
+
+Hidden surprises in the Bitcoin blockchain and how they are stored: Nelson Mandela, Wikileaks, photos, and Python software
+Every Bitcoin transaction is stored in the distributed database known as the Bitcoin blockchain. However, people have found ways to hack the Bitcoin protocol to store more than just transactions. I've searched through the blockchain and found many strange and interesting things - from images to source code in JavaScript, Python, and Basic. If you're running a Bitcoin client, you probably have all this data stored on your system.[1]
+
+Nelson Mandela tribute
+The Bitcoin blockchain contains this image of Nelson Mandela and the tribute text. Someone encoded this data into fake addresses in Bitcoin transactions, causing it to be stored in the Bitcoin system.
+Image of Nelson Mandela found in the Bitcoin blockchain.
+
+Nelson Mandela (1918-2013)
+"I am fundamentally an optimist. Whether that comes from nature or nurture, I cannot say. Part of being optimistic is keeping one’s head pointed toward the sun, one’s feet moving forward. There were many dark moments when my faith in humanity was sorely tested, but I would not and could not give myself up to despair. That way lays defeat and death."
+"I learned that courage was not the absence of fear, but the triumph over it. The brave man is not he who does not feel afraid, but he who conquers that fear."
+"Difficulties break some men but make others. No axe is sharp enough to cut the soul of a sinner who keeps on trying, one armed with the hope that he will rise even in the end."
+"It always seems impossible until it’s done."
+"When a man has done what he considers to be his duty to his people and his country, he can rest in peace."
+"Real leaders must be ready to sacrifice all for the freedom of their
+"Everyone can rise above their circumstances and achieve success if they are dedicated to and passionate about what they do."
+"Education is the most powerful weapon which you can use to change the world."
+"For to be free is not merely to cast off one’s chains, but to live in a way that respects and enhances the freedom of others."
+"There is no passion to be found playing small – in settling for a life that is less than the one you are capable of living."
+“There is nothing like returning to a place that remains unchanged to find the ways in which you yourself have altered.” -Nelson Mandela
+
+The data is stored in the blockchain by encoding hex values into the addresses. Below is an excerpt of one of the transactions storing the Mandela information. In this transaction, tiny amounts of bitcoins are being sent to fake addresses such as 15gHNr4TCKmhHDEG31L2XFNvpnEcnPSQvd. This address is stored in the blockchain as hex 334E656C736F6E2D4D616E64656C612E6A70673F. If you convert those hex bytes to Unicode, you get the string 3Nelson-Mandela.jpg?, representing the image filename. Similarly, the following addresses encode the data for the image. Thus, text, images, and other content can be stored in Bitcoin by using the right fake addresses.
+
+
+
+Secret message in the first Bitcoin block
+It is well known that the Genesis block, the very first block of data in Bitcoin contained a "secret" message. This message was stored in the coinbase[2], a part of a Bitcoin block that is filled in by the miner who mines a Bitcoin block. Along with the standard data, the original transaction also contains the message: 'The Times 03/Jan/2009 Chancellor on brink of second bailout for banks'[3]. Presumably this is a political commentary on Bitcoin compared to the insolvency of "real" banks.
+Bitcoin logo
+People rapidly figured out how to encode arbitrary content into the Bitcoin blockchain by using hex data in place of Bitcoin addresses.[4] One of the first uses of this technique was to store the Bitcoin logo in the blockchain. I extracted the following image from the blockchain, where it was hidden among normal transactions.[5]
+Image found in the Bitcoin blockchain: Bitcoin logo
+
+The Bitcoin logo, hidden in the blockchain.
+Prayers from miners
+Early on, the miner Eligius started putting Catholic prayers in English and Latin in the coinbase field of blocks they mined. Here are some samples:
+Benedictus Sanguis eius pretiosissimus.
+Benedictus Iesus in sanctissimo altaris Sacramento.
+Ave Maria, gratia plena, Dominus tecum. Benedicta tu in mulieribus, ...
+...and life everlasting, through the merits of Jesus Christ, my Lord and Redeemer.
+O Heart of Jesus, burning with love for us, inflame our hearts with love for Thee.
+Jesus, meek and humble of heart, make my heart like unto thine!
+These prayers turned out to be surprisingly controversial, leading to insults being exchanged through the blockchain: "Oh, and god isn't real, sucka. Stop polluting the blockchain with your nonsense.", "FFS Luke-Jr leave the blockchain alone!", and a rickroll in response: "Militant atheists, http://bit.ly/naNhG2 -- happy now?".[6]
+The codebase technique has since been used by many other miners as advertising. Typical messages are: Hi from 50BTC.com, For Pierce and Paul, Mined at GIVE-ME-COINS.com, EclipseMC: Aluminum Falcon?, Happy NY! Yours GHash.IO, Mined By ASICMiner, BTC Guild, Made in China, BitMinter, /bitparking, hi from poolserverj, /ozcoin/stratum/, /slush/.[7]
+
+XSS demo
+I've found JavaScript code in the blockchain that demonstrates a potential XSS attack. A common security hole on websites is cross-site scripting (XSS)[8], where an attacker can inject hostile JavaScript into a web page viewed by the victim. Surprisingly, such an attack was possible with Bitcoin. The transaction's output script was set to the hex corresponding to:
+<script>window.alert("If this were an actual exploit, your mywallet would be empty.")</script>
+Apparently some Bitcoin websites would fail to escape the tags, causing the script to run if you viewed the page. The above script just created a harmless dialog box, but a more malicious transaction could potentially steal the user's bitcoins stored on the website.
+Len Sassaman Tribute
+A tribute to cryptographer Len Sassaman was put in the Bitcoin blockchain a couple weeks after his death by Dan Kaminsky.[9]
+---BEGIN TRIBUTE---
+#./BitLen
+:::::::::::::::::::
+:::::::.::.::.:.:::
+:.: :.' ' ' ' ' : :
+:.:'' ,,xiW,"4x, ''
+:  ,dWWWXXXXi,4WX,
+' dWWWXXX7"     `X,
+ lWWWXX7   __   _ X
+:WWWXX7 ,xXX7' "^^X
+lWWWX7, _.+,, _.+.,
+:WWW7,. `^"-" ,^-'
+ WW",X:        X,
+ "7^^Xl.    _(_x7'
+ l ( :X:       __ _
+ `. " XX  ,xxWWWWX7
+  )X- "" 4X" .___.
+,W X     :Xi  _,,_
+WW X      4XiyXWWXd
+"" ,,      4XWWWWXX
+, R7X,       "^447^
+R, "4RXk,      _, ,
+TWk  "4RXXi,   X',x
+lTWk,  "4RRR7' 4 XH
+:lWWWk,  ^"     `4
+::TTXWWi,_  Xll :..
+=-=-=-=-=-=-=-=-=-=
+LEN "rabbi" SASSAMA
+     1980-2011
+Len was our friend.
+A brilliant mind,
+a kind soul, and
+a devious schemer;
+husband to Meredith
+brother to Calvin,
+son to Jim and
+Dana Hartshorn,
+coauthor and
+cofounder and
+Shmoo and so much
+more.  We dedicate
+this silly hack to
+Len, who would have
+found it absolutely
+hilarious.
+--Dan Kaminsky,
+Travis Goodspeed
+P.S.  My apologies,
+BitCoin people.  He
+also would have
+LOL'd at BitCoin's
+new dependency upon
+   ASCII BERNANKE
+:'::.:::::.:::.::.:
+: :.: ' ' ' ' : :':
+:.:     _.__    '.:
+:   _,^"   "^x,   :
+'  x7'        `4,
+ XX7            4XX
+ XX              XX
+ Xl ,xxx,   ,xxx,XX
+( ' _,+o, | ,o+,"
+ 4   "-^' X "^-'" 7
+ l,     ( ))     ,X
+ :Xx,_ ,xXXXxx,_,XX
+  4XXiX'-___-`XXXX'
+   4XXi,_   _iXX7'
+  , `4XXXXXXXXX^ _,
+  Xx,  ""^^^XX7,xX
+W,"4WWx,_ _,XxWWX7'
+Xwi, "4WW7""4WW7',W
+TXXWw, ^7 Xk 47 ,WH
+:TXXXWw,_ "), ,wWT:
+::TTXXWWW lXl WWT:
+----END TRIBUTE----
+A creature simulator in Basic
+I found a simple character-based simulator in Basic. The idea is 5 creatures wander around the screen eating food blocks and breeding or dying. Unfortunately the code has a bunch of bugs and doesn't work.[10]
+10 REM The variables in life
+20 ' life the lifespan of a creature
+30 ' mates the number of mates a creature needs to breed
+40 'move the type of land a creature can be on (1=earth 2=water 3=all)
+50 'foodtype the type of food a creature can eat
+60 'f2breed the amount of food a creature needs to breed
+70 'a2breed the age a creature needs to breed
+80 'cy(i) the y location of a creature
+90 'cx(i) the x location of a creature
+100 'cf(i) the amount of food a creature has
+110 'ca(i) the age of a creature
+120 CLS
+130 COLOR 14, 0, 0
+140 CLS
+150 LOCATE 2, 30
+160 PRINT "Life"
+170 COLOR 7, 0, 0
+180 LOCATE 20, 20
+190 INPUT "Do you want to start (y/n) ? ", START$
+200 IF START$ = "n" THEN END 'it will be gosub
+210 REM
+220 REM Setting attributes
+230 LIFE = 5
+240 MATES = 0
+250 MOVE = 1
+260 FOODTYPE = 1
+270 F2BREED = 10
+280 A2BREED = 1
+290 F# = 10
+300 C# = 5
+305 CMUTA = 5
+310 EPERYEAR = 1
+320 REM
+330 GOSUB 360
+350 REM
+360 REM placing creatures
+370 COLOR 5, 6, 0
+380 CLS
+390 COLOR 14, 0, 0
+400 FOR I = 1 TO C#
+410 RANDOMIZE TIMER
+420 Y = INT(RND * 21)
+430 IF Y < 15 THEN GOTO 420
+440 X = INT(RND * 61)
+450 IF X < 15 THEN GOTO 440
+460 LOCATE Y, X
+470 CY(I) = Y 'This saves the creatures y
+480 CX(I) = X 'This saves the creatures x
+490 CF(I) = 10
+500 CA(I) = 0
+510 PRINT CHR$(2)
+520 NEXT I
+'530 RETURN
+540 REM
+550 REM This places the food
+560 COLOR 2, 0, 0
+570 FOR I = 1 TO F#
+580 RANDOMIZE TIMER
+590 Y = INT(RND * 21)
+600 IF Y < 15 THEN GOTO 590
+610 X = INT(RND * 61)
+620 IF X < 15 THEN GOTO 610
+630 LOCATE Y, X
+640 FY(I) = Y 'This saves the foods y
+650 FX(I) = X 'This saves the foods x
+660 PRINT CHR$(5)
+670 NEXT I
+680 REM
+690 REM Starts trapping
+700 ON KEY(1) GOSUB 1480
+710 KEY(1) ON
+720 REM prompts to start
+730 LOCATE 1, 1
+740 PRINT "Press F1 to pause. "
+750 REM
+760 REM checks the creatures
+770 REM can it breed
+780 FOR I = 1 TO C#
+790 IF CA(I) > A2BREED THEN GOTO 810
+800 GOTO 960
+810 IF CF(I) > F2BREED THEN GOTO 830
+820 GOTO 960
+830 FOOD# = FOOD# - F2BREED
+840 RANDOMIZE 'TIMER
+850 MUTA = INT(RND * CMUTA)
+860 IF MUTA <> 1 THEN GOTO 920  'Checks to see if it mutates
+870 LIFE = INT(RND * 101)
+880 MATES = INT(RND * 3)
+890 MOVE = INT(RND * 4)
+900 FOOD = INT(RND * 4)
+910 A = C#
+920 C# = 1
+930 GOSUB 360
+940 C# = A
+950 NEXT I
+960 REM
+970 REM moves the creatures
+980 FOR I = 1 TO C#
+990 RANDOMIZE TIMER
+1000 A = INT(RND * 5)
+1010 IF A = 1 THEN CY(I) = CY(I) + 1
+1020 IF A = 2 THEN CY(I) = CY(I) - 1
+1030 IF A = 3 THEN CX(I) = CX(I) + 1
+1040 IF A = 4 THEN CX(I) = CX(I) - 1
+1050 GOSUB 1380
+1060 NEXT I
+1070 REM **********
+1080 REM is the creature on food
+1090 FOR I = 1 TO C#
+1100 FOR A = 1 TO F#
+1110 IF CY(I) = FY(A) THEN YES = 1
+1120 IF CX(I) = FX(A) THEN YES = YES + 1
+1130 IF YES = 2 THEN GOSUB 1180
+1140 NEXT A
+1150 NEXT I
+1160 GOSUB 1170
+1165 GOTO 1250
+1170 REM giving the creature food
+1180 CF(I) = CF(I) + 1
+1190 COLOR 2, 0, 0
+1200  LOCATE FY(A), FX(A)
+1210 PRINT " "
+1220 FY(A) = 0  'DELETEs the foods y
+1230 FX(A) = 0  'DELETEs the foods x
+1240 RETURN
+1250 REM dos it die
+1260 FOR I = 1 TO C#
+1270 IF CF(I) < 9 THEN GOSUB 1300
+1280 NEXT I
+1290 GOTO 1340
+1300 COLOR 14, 0, 0
+1310 LOCATE CY(I), CX(I)
+1320 PRINT " "
+1330 RETURN
+1340 REM this takes away x food from a creature
+1350 FOR I = 1 TO C#
+1360 IF CA(I) MOD EPERYEAR > 0 THEN CF(I) = CF(I) - 1
+1370 NEXT I
+1380 REM this redraws the SCREEN
+1385 COLOR 14, 6, 0
+1390 CLS
+1400 FOR I = 1 TO C#
+1410 COLOR 14, 6, 0
+1420 LOCATE CY(I), CX(I)
+1430 PRINT CHR$(2)
+1460 NEXT I
+1464 LOCATE 1, 1
+1465 INPUT "gsf", A
+1470 GOTO 760
+1480 COLOR 7, 0, 0
+1490 END
+
+view rawlife.bas hosted with ❤ by GitHub
+The original Bitcoin paper
+In this transaction the Bitcoin blockchain contains the PDF for the original Bitcoin paper.
+
+Thumbnail of the original Bitcoin paper.
+
+
+Thumbnail of the original Bitcoin paper.
+Rickrolls
+Rickrolling is a popular internet prank, and Bitcoin is not immune. One rickroll was described above as part of the prayer dispute.[6] The lyrics to Never Gonna Give You Up! are found in a second rickroll.[11]
+A third rickroll has the song metadata and lyrics encoded in Base-64.[12]
+
+Catagory: Poetry
+Title: Never Gonna Give You Up
+Performer: Rick Astley
+Writer: Mike Stock, Matt Aitken, Pete Waterman
+Label: RCA Records
+Released: 27, July, 1987
+
+We're no strangers to love
+You know the rules and so do I
+A full commitment's what I'm thinking of
+You wouldn't get this from any other guy
+I just wanna tell you how I'm feeling
+Gotta make you understand
+
+Never gonna give you up,
+Never gonna let you down
+Never gonna run around and desert you
+...
+Photographs in a messaging system
+Recently someone has built a message/storage system on top of Bitcoin that allows a growing sequence of messages, text, and images to be stored in the blockchain.[13]
+Among other things, this system contains text from the Bhagavad Gita, 1000 digits of pi, multiple JPG and PNG images, a Shel Silverstein poem, a Rumi poem, and quotes from a random party. Here are some of the images stored in the blockchain using this system:
+
+EMBIICompressedLogo.png: Image found in the Bitcoin blockchain. KruseEMBII.jpg: Image found in the Bitcoin blockchain. EhrichWeAreStarStuff.jpg: Image found in the Bitcoin blockchain. DriveHugPuddle.jpg: Image found in the Bitcoin blockchain. ILoveYouMore.jpg: Image found in the Bitcoin blockchain.
+
+
+Some images found in the Bitcoin blockchain.
+Wikileaks cablegate data
+A 2.5 megabyte Wikileak files ('cablegate-201012041811.7z') was embedded in the Bitcoin blockchain.[14] The data is followed by a message explaining how to access it.[15]
+Wikileaks Cablegate Backup
+
+cablegate-201012041811.7z
+
+Download the following transactions with Satoshi Nakamoto's download tool which
+can be found in transaction 6c53cd987119ef797d5adccd76241247988a0a5ef783572a9972e7371c5fb0cc
+
+Free speech and free enterprise! Thank you Satoshi!
+
+5c593b7b71063a01f4128c98e36fb407b00a87454e67b39ad5f8820ebc1b2ad5
+221d900b5ac701028f9dfab7dfba326f608308386d45c05432e721b7c122cba7
+... 128 lines of transaction ids deleted ...
+Downloading the data from the blockchain is inconvenient since the download tool needs to be used on the 130 chunks of 20 KB separately. (It's much easier to download the file from the internet.)
+Cablegate data stored in Bitcoin
+
+The blockchain contains the source code for Python tools to insert data into the blockchain and to download it.[16] In a weird self-referential twist, the downloader can be used to download itself. The uploader/downloader puts data into the destination address, but extends the previous technique by using Bitcoin escrow / multi-sig to put three addresses in each destination. It also uses a checksum to make storage more reliable.
+
+Here's the code in the blockchain to insert data into the blockchain. While it says it was written by Satoshi Nakamoto (the pseudonymous author of Bitcoin), that's probably not true.
+
+#
+# File insertion tool for Bitcoin
+# Requires git://github.com/jgarzik/python-bitcoinrpc.git
+#
+# (c) 2013 Satoshi Nakamoto All Rights Reserved
+#
+# UNAUTHORIZED DUPLICATION AND/OR USAGE OF THIS PROGRAM IS PROHIBITED BY US AND INTERNATIONAL COPYRIGHT LAW
+
+import io
+import jsonrpc
+import os
+import random
+import struct
+import sys
+from binascii import crc32,hexlify,unhexlify
+from decimal import Decimal
+
+if len(sys.argv) < 5:
+    print(\
+"""\
+Usage: %s <file> <dest addr> <dest amount> {<fee-per-kb>}
+Set BTCRPCURL=http://user:pass@localhost:portnum""" % sys.argv[0], file=sys.stderr)
+    sys.exit()
+
+COIN = 100000000
+
+def unhexstr(str):
+    return unhexlify(str.encode('utf8'))
+
+proxy = jsonrpc.ServiceProxy(os.environ['BTCRPCURL'])
+
+def select_txins(value):
+    unspent = list(proxy.listunspent())
+    random.shuffle(unspent)
+
+    r = []
+    total = 0
+    for tx in unspent:
+        total += tx['amount']
+        r.append(tx)
+
+        if total >= value:
+            break
+
+    if total < value:
+        return None
+    else:
+        return (r, total)
+
+def varint(n):
+    if n < 0xfd:
+        return bytes([n])
+    elif n < 0xffff:
+        return b'\xfd' + struct.pack('<H',n)
+    else:
+        assert False
+
+def packtxin(prevout, scriptSig, seq=0xffffffff):
+    return prevout[0][::-1] + struct.pack('<L',prevout[1]) + varint(len(scriptSig)) + scriptSig + struct.pack('<L', seq)
+
+def packtxout(value, scriptPubKey):
+    return struct.pack('<Q',int(value*COIN)) + varint(len(scriptPubKey)) + scriptPubKey
+
+def packtx(txins, txouts, locktime=0):
+    r = b'\x01\x00\x00\x00' # version
+    r += varint(len(txins))
+
+    for txin in txins:
+        r += packtxin((unhexstr(txin['txid']),txin['vout']), b'')
+
+    r += varint(len(txouts))
+
+    for (value, scriptPubKey) in txouts:
+        r += packtxout(value, scriptPubKey)
+
+    r += struct.pack('<L', locktime)
+    return r
+
+OP_CHECKSIG = b'\xac'
+OP_CHECKMULTISIG = b'\xae'
+OP_PUSHDATA1 = b'\x4c'
+OP_DUP = b'\x76'
+OP_HASH160 = b'\xa9'
+OP_EQUALVERIFY = b'\x88'
+def pushdata(data):
+    assert len(data) < OP_PUSHDATA1[0]
+    return bytes([len(data)]) + data
+
+def pushint(n):
+    assert 0 < n <= 16
+    return bytes([0x51 + n-1])
+
+
+def addr2bytes(s):
+    digits58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
+    n = 0
+    for c in s:
+        n *= 58
+        if c not in digits58:
+            raise ValueError
+        n += digits58.index(c)
+
+    h = '%x' % n
+    if len(h) % 2:
+        h = '0' + h
+
+    for c in s:
+        if c == digits58[0]:
+            h = '00' + h
+        else:
+            break
+    return unhexstr(h)[1:-4] # skip version and checksum
+
+def checkmultisig_scriptPubKey_dump(fd):
+    data = fd.read(65*3)
+    if not data:
+        return None
+
+    r = pushint(1)
+
+    n = 0
+    while data:
+        chunk = data[0:65]
+        data = data[65:]
+
+        if len(chunk) < 33:
+            chunk += b'\x00'*(33-len(chunk))
+        elif len(chunk) < 65:
+            chunk += b'\x00'*(65-len(chunk))
+
+        r += pushdata(chunk)
+        n += 1
+
+    r += pushint(n) + OP_CHECKMULTISIG
+    return r
+
+
+(txins, change) = select_txins(0)
+
+txouts = []
+
+data = open(sys.argv[1],'rb').read()
+data = struct.pack('<L', len(data)) + struct.pack('<L', crc32(data)) + data
+fd = io.BytesIO(data)
+
+while True:
+    scriptPubKey = checkmultisig_scriptPubKey_dump(fd)
+
+    if scriptPubKey is None:
+        break
+
+    value = Decimal(1/COIN)
+    txouts.append((value, scriptPubKey))
+
+    change -= value
+
+# dest output
+out_value = Decimal(sys.argv[3])
+change -= out_value
+txouts.append((out_value, OP_DUP + OP_HASH160 + pushdata(addr2bytes(sys.argv[2])) + OP_EQUALVERIFY + OP_CHECKSIG))
+
+# change output
+change_addr = proxy.getnewaddress()
+txouts.append([change, OP_DUP + OP_HASH160 + pushdata(addr2bytes(change_addr)) + OP_EQUALVERIFY + OP_CHECKSIG])
+
+tx = packtx(txins, txouts)
+signed_tx = proxy.signrawtransaction(hexlify(tx).decode('utf8'))
+
+FEEPERKB = Decimal(0.001)
+try:
+    FEEPERKB = Decimal(sys.argv[4])
+except IndexError:
+    pass
+fee = Decimal(len(signed_tx['hex'])/1000) * FEEPERKB
+change -= fee
+txouts[-1][0] = change
+
+tx = packtx(txins, txouts)
+signed_tx = proxy.signrawtransaction(hexlify(tx).decode('utf8'))
+assert signed_tx['complete']
+
+print('Size: %d  Fee: %2.8f' % (len(signed_tx['hex'])/2,fee),file=sys.stderr)
+
+if False:
+    print(proxy.sendrawtransaction(signed_tx['hex']))
+else:
+    print(signed_tx)
+view rawbitcoin-insertion-tool.py hosted with ❤ by GitHub
+And here's the code to extract data from the blockchain.
+#
+# File downloader
+# Requires git://github.com/jgarzik/python-bitcoinrpc.git
+#
+# (c) 2013 Satoshi Nakamoto All Rights Reserved
+#
+# UNAUTHORIZED DUPLICATION AND/OR USAGE OF THIS PROGRAM IS PROHIBITED BY US AND INTERNATIONAL COPYRIGHT LAW
+
+import sys
+import os
+import jsonrpc
+import struct
+from binascii import crc32,hexlify,unhexlify
+
+
+if len(sys.argv) != 2:
+    print("""\
+Usage: %s <txhash>
+Set BTCRPCURL=http://user:pass@localhost:portnum""" % sys.argv[0], file=sys.stderr)
+    sys.exit()
+
+proxy = jsonrpc.ServiceProxy(os.environ['BTCRPCURL'])
+
+txid = sys.argv[1]
+
+tx = proxy.getrawtransaction(txid,1)
+
+data = b''
+for txout in tx['vout'][0:-2]:
+    for op in txout['scriptPubKey']['asm'].split(' '):
+        if not op.startswith('OP_') and len(op) >= 40:
+            data += unhexlify(op.encode('utf8'))
+
+length = struct.unpack('<L', data[0:4])[0]
+checksum = struct.unpack('<L', data[4:8])[0]
+data = data[8:8+length]
+
+if checksum != crc32(data):
+    print('Checksum mismatch; expected %d but calculated %d' % (checksum, crc32(data)),
+          file=sys.stderr)
+    sys.exit()
+
+sys.stdout.buffer.write(data)
+view rawbitcoin-file-downloader.py hosted with ❤ by GitHub
+The download tool is slightly buggy - the crc32 has a signed-vs-unsigned problem which suggests it wasn't used extensively.
+Leaked firmware key and illegal primes
+This transaction has a link about a leaked private key, followed by 1K of hex bytes as text, which supposedly is the private key for some AMI firmware.
+The change from that transaction was used for this transaction, which references the Wikipedia page on illegal primes, followed by two supposedly-illegal primes from that page.
+
+The change from that transaction was then used for the Wikileaks Cablegate messages, implying the same person was behind all these messages. It looks like someone was trying to store a variety of dodgy stuff in the Bitcoin blockchain, either to cause trouble or to make some sort of political point.
+
+Email from Satoshi Nakamoto
+The following email message allegedly from Bitcoin inventor Satoshi Nakamoto appears in the blockchain.[17] (It's almost certainly not really from him.) It seems to be referring to the removal of some Script opcodes from the Bitcoin server earlier and making the corresponding change to the Electrum server. My guess is this message is someone pointing out a bug fix for Electrum in a joking way.
+From a3a61fef43309b9fb23225df7910b03afc5465b9 Mon Sep 17 00:00:00 2001
+From: Satoshi Nakamoto <satoshin@gmx.com>
+Date: Mon, 12 Aug 2013 02:28:02 -0200
+Subject:[PATCH] Remove (SINGLE|DOUBLE)BYTE
+
+I removed this from Bitcoin in f1e1fb4bdef878c8fc1564fa418d44e7541a7e83
+in Sept 7 2010, almost three years ago. Be warned that I have not
+actually tested this patch.
+---
+ backends/bitcoind/deserialize.py |    8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/backends/bitcoind/deserialize.py b/backends/bitcoind/deserialize.py
+index 6620583..89b9b1b 100644
+--- a/backends/bitcoind/deserialize.py
++++ b/backends/bitcoind/deserialize.py
+@@ -280,10 +280,8 @@ opcodes = Enumeration("Opcodes", [
+     "OP_WITHIN", "OP_RIPEMD160", "OP_SHA1", "OP_SHA256", "OP_HASH160",
+     "OP_HASH256", "OP_CODESEPARATOR", "OP_CHECKSIG", "OP_CHECKSIGVERIFY", "OP_CHECKMULTISIG",
+     "OP_CHECKMULTISIGVERIFY",
+-    ("OP_SINGLEBYTE_END", 0xF0),
+-    ("OP_DOUBLEBYTE_BEGIN", 0xF000),
+     "OP_PUBKEY", "OP_PUBKEYHASH",
+-    ("OP_INVALIDOPCODE", 0xFFFF),
++    ("OP_INVALIDOPCODE", 0xFF),
+ ])
+
+
+@@ -293,10 +291,6 @@ def script_GetOp(bytes):
+         vch = None
+         opcode = ord(bytes[i])
+         i += 1
+-        if opcode >= opcodes.OP_SINGLEBYTE_END and i < len(bytes):
+-            opcode <<= 8
+-            opcode |= ord(bytes[i])
+-            i += 1
+
+         if opcode <= opcodes.OP_PUSHDATA4:
+             nSize = opcode
+--
+1.7.9.4
+Text in Bitcoin addresses
+Bitcoin addresses are 34 characters long, so it is possible to put something interesting in the text address, although there are limitations.
+The first option for putting text into an address is to test millions or billions of private keys by brute force in the hope of randomly getting a few characters you want in the public address. This generates a "vanity" address which is a valid working Bitcoin address. An example is Bitcoin Armory, which uses the donation address 1ArmoryXcfq7TnCSuZa9fQjRYwJ4bkRKfv. Note that only six desirable characters were found, and the rest are random. You can use the vanitygen command-line tool or a website like bitcoinvanity to generate these addresses.
+
+Many people have recently received tiny spam payments from vanity addresses with the prefixes 1Enjoy... and 1Sochi... addresses. These payments don't get confirmed by miners and the purpose of them is puzzling.
+
+The second option is to use whatever ASCII address you want (starting with a 1 and ending with a six-character checksum). Since there is no known private key for this address, any bitcoins sent to this address are lost forever. Despite this, some addresses have received significant amounts: 1BitcoinEaterAddressDontSendf59kuE. has received over 1.6 bitcoins (over $1000). 1111111111111111111114oLvT2 (hex 0) has received almost 3 bitcoins.
+
+A very strange activity is the large-scale deliberate "burning" of bitcoins by sending them to 1CounterpartyXXXXXXXXXXXXXXXUWLpVr, where nobody can ever use them. Amazingly, this address has received over 2,130 bitcoins (about $1.5 million dollars worth) that are now lost forever. The motivation is that Counterparty is issuing their own crypto-currency (XCP) in exchange for destroyed bitcoins. The idea is that "proof-of-burn" is a more fair way of distributing currency than mining.
+
+Mysterious encrypted data in the blockchain
+There are many mysterious things in the blockchain that I couldn't figure out, that appear to be encrypted data.
+Between June and September 2011, there were thousands of tiny mystery transactions from a few addresses to hundreds of thousands of random addresses sorted in decreasing order. These transactions are for 1 to 45 Satoshis, and have never been redeemed. As far as I can tell, the data is totally random. But maybe there is a secret message in the addresses or in the amounts. In any case, someone went to a lot of work to do this, so there must be some meaning. [20]
+
+One interesting thing is that the change address from the cablegate description was then used for three 86 kilobyte GPG-encoded files.[18] From the "magic numbers" at the beginning of these files I know that these are GPG files encrypted using CAST5, but what is in these files is a mystery. Without the passphrase, they can't be decrypted.
+
+By following the change addresses, we can see that after submitting the "Satoshi" uploader and downloader, the same person submitted the Bitcoin PDF. The same person then submitted five mysterious files.[19] These files appear entirely random, so they may contain encrypted data.
+
+Valentine's day messages
+There are a bunch of Valentine's day messages in the blockchain from a couple days ago. I assume someone set up a service to do this.
+How to put your own message in the blockchain
+It's pretty easy to put your own 20-character message into the blockchain. The following steps explain how.
+Take your 20-character string and convert it to hex. E.g. in Python:
+'//righto.com/bc'.encode('hex')
+Convert the resulting hex string to an address. An easy way is online: https://blockchain.info/q/hashtoaddress/your hex value yields 1AXJnNiDijKUnY9UJZkV5Ggdgh36aWDBYj.
+Send bitcoins to that address and your message will show up in the blockchain when your transaction gets mined. Important: those bitcoins will be lost forever, so send a very small amount, like 10 cents. My test message can be seen at the end of blk00113 here.
+Summary
+People have found a variety of ways to store strange things in the Bitcoin blockchain. I have touched on some of them here, but undoubtedly there are many other hidden treasures.
+The notes to this article provides hashes for the interesting transactions, in case anyone wants to investigate further.
+
+ASCII image of Bernanke from the Bitcoin blockchain.
+
+
+ASCII image of Bernanke from the Bitcoin blockchain.
+Notes and references
+[1] Clients store the 16-gigabyte blockchain in the data directory. On Windows, this is C:\Users\userid\AppData\Roaming\Bitcoin. The blocks are stored in a sequence of 128 megabyte files blknnnnnn.dat. Syncing these files is why a full Bitcoin client takes hours to start up.
+
+An easy way to see the ASCII contents of the blockchain is to visit bitcoinstrings.com.
+
+[2] In the Bitcoin protocol, every mined block has a transaction that creates new bitcoins. Part of that transaction is an arbitrary coinbase field of up to 100 bytes in the Script language. Normally the coinbase field has data such as the block number, timestamp, difficulty, and an arbitrary nonce number.
+
+The full coinbase in the genesis block is:
+
+PUSHDATA: 04
+bits value (mining difficulty): FFFF001D
+PUSHDATA: 01
+nonce value: 04
+PUSHDATA: 45
+'The Times 03/Jan/2009 Chancellor on brink of second bailout for banks': 5468652054696D65732030332F4A616E2F32303039204368616E63656C6C6F72206F6E206272696E6B206F66207365636F6E64206261696C6F757420666F722062616E6B73
+[3] The message in the Genesis block is slightly different from the actual newspaper article: Chancellor Alistair Darling on brink of second bailout for banks.
+
+[4] A brief overview of Bitcoin addresses will make this technique easier to understand. Normally, you start with a random 256-bit private key, which is necessary to redeem Bitcoins. From this, you generate a public key, which is hashed to a 160-bit address. This address is displayed in ASCII using a technique called Base58Check encoding. This ASCII address, such as 1LLLfmFp8yQ3fsDn7zKVBHMmnMVvbYaAE6, is the address used for transferring Bitcoins. But inside the transaction, the address is stored as the 160-bit (20 byte) hex value.
+
+In normal use, you have no control over the 20-byte hex value used as an address. The trick for storing data in the transaction is to replace the address with 20 bytes of data that you want to store. For instance, the string This is my test data turns into the hex data '54686973206973206d7920746573742064617461'. If you send some bitcoins to that address, the bitcoins are lost forever (since you don't have the private key matching that address), but your message is now recorded in the Bitcoin blockchain.
+
+See my earlier article for details on how Bitcoin addresses are generated.
+
+[5] The Bitcoin logo was hidden in two transactions: ceb1a7fb57ef8b75ac59b56dd859d5cb3ab5c31168aa55eb3819cd5ddbd3d806 and 9173744691ac25f3cd94f35d4fc0e0a2b9d1ab17b4fe562acc07660552f95518.
+
+If you look at the first ScriptPubKey of the first transaction, the address is 3d79626567696e206c696e653d3132382073697a, which turns into the ASCII text =ybegin line=128 siz. If you do this for all the addresses, you get an ecoded file. This file turns out to be encoded in the obscure yEnc encoding, designed in 2001 for transmitting binaries on Usenet. I hacked together some code to extract and decode the file, resulting in the bitcoin.jpg file shown above. There was some discussion of this logo in 2011, but I don't know if anyone has actually extracted the image until now.
+
+[6] The prayers can be found in blk00003 and blk00004. Eligius is appropriately named after Saint Eligius the patron saint of goldsmiths and coin collectors. The Rickroll is here.
+
+[7] For a while, the mysterious message /P2SH/ appeared in the coinbase field over and over. This string is an indication that the miner supports the pay-to-script-hash Bitcoin feature. The purpose of this was to ensure that more than 50% of the miners supported the feature before it was rolled out.
+
+[8] The XSS attack demo is in transaction 59bd7b2cff5da929581fc9fef31a2fba14508f1477e366befb1eb42a8810a000. The JavaScript for the attack was put in the transaction's output script. The blockchain.info website displays the contents of the output script, but apparently didn't escape it as HTML. Thus, the contents <script> would not be displayed as text, but would be executed as part of the page. The demo only popped up an alert box, rather than running malicious JavaScript. The creator of the attack describes it on Reddit.
+
+[9] A talk presents some details on the tribute (here). The data is in transaction 930a2114cdaa86e1fac46d15c74e81c09eee1d4150ff9d48e76cb0697d8e1d72. This tribute cost 1 BTC, 0.01 BTC per line.
+
+[10] The Basic code is in block 3a1c1cc760bffad4041cbfde56fbb5e29ea58fda416e9f4c4615becd65576fe7, and it is stored in "uploader" format, with a donation to Satoshi's genesis block address 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa.
+
+Unfortunately the code is a mess with GOSUBs without RETURNs, broken loops, half-implemented ideas, and unused variables, so the code doesn't work, which is disappointing. It's a mystery why someone would put this BASIC code into the blockchain.
+
+[11] The Rick Astley lyrics are in transaction d29c9c0e8e4d2a9790922af73f0b8d51f0bd4bb19940d9cf910ead8fbe85bc9b. This data is included using the OP_RETURN technique, which was later supported as a non-hacky way to put data into the blockchain.
+
+[12] The third rickroll has the data encoded in a structured format, maybe from some music database. The data format is base-64 metadatabase-64 lyrics The transaction is 0b4efe49ea1454020c4d51a163a93f726a20cd75ad50bb9ed0f4623c141a8008.
+
+[13] The messaging system references "AtomSea & EMBII", who I assume are the creators. The chain started with address 12KPNWdQ3sesPzMGHLMHrWbSkZvaeKZgHt with 0.269 BTC on 2013-12-01 23:54:35 Each output is 0.000055 bitcoins, just over the current network minimum of .0000546 bitcoin. The next transaction in the chain can be found by looking at each change address, which pays for the next block. The chain ended when it ran out of bitcoins, at address 1DQwj8BDLWy9BMzX8uUcDYze3hx8q7uBy4.
+
+In total, the data chain has 85KB of data including images, random quotes, and HTML. The system embeds filenames, lengths, and the data. There are also a lot of transaction ids stored in the data, presumably serving as an index.
+
+[14] The 2.5 megabyte Cablegate file was stored in 130 separate transactions each holding 20,000 bytes of data, transactions 5c593b7b71063a01f4128c98e36fb407b00a87454e67b39ad5f8820ebc1b2ad5 to 2663cfa9cf4c03c609c593c3e91fede7029123dd42d25639d38a6cf50ab4cd44#o6". Each transaction includes a trivial 0.00000001 bitcoin donation to the Wikileaks donation address 1HB5XMLmzFVj8ALj6mfBsbifRoD4miY36v. This data is stored in checksummed download tool format.
+
+[15] The cablegate description is in 691dd277dc0e90a462a3d652a1171686de49cf19067cd33c7df0392833fb986a, and is stored in "uploader" format. It's a bit circular that this message describes where to find the download tool, but the message itself needs the download tool to be read. Fortunately it's not too hard to read the message without the tool.
+
+[16] The uploader is in transaction 4b72a223007eab8a951d43edc171befeabc7b5dca4213770c88e09ba5b936e17". The downloader is in transaction 6c53cd987119ef797d5adccd76241247988a0a5ef783572a9972e7371c5fb0cc.
+
+In a cute touch, these transactions both donate 0.00000001 bitcoins to address 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa, which is Satoshi Nakamoto's address from the Genesis Block.
+
+[17] This transaction, 77822fd6663c665104119cb7635352756dfc50da76a92d417ec1a12c518fad69 has an unusual scriptPubKey: OP_IF OP_INVALIDOPCODE 4effffffff 1443 bytes of data OP_ENDIF.
+
+[18] The encrypted GPG files are in transactions 7379ab5047b143c0b6cfe5d8d79ad240b4b4f8cced55aa26f86d1d3d370c0d4c#o448, d3c1cb2cdbf07c25e3c5f513de5ee36081a7c590e621f1f1eab62e8d4b50b635#o448, and cce82f3bde0537f82a55f3b8458cb50d632977f85c81dad3e1983a3348638f5c.
+
+[19] To "follow the money", the PDF transaction put change into address 1HT8vpTV1wj2ck6jgW7my6vCtJQv14Cdp. This address funded the embedding of a 10KB mystery file in this transaction. The change from that was used for another file here, followed by this, this, and this. These uploaded file transactions all included 0.001 BTC donations to 1JVQw1siukrxGFTZykXFDtcf6SExJVuTVE, the 50BTC.com address.
+
+[20] Some addresses associated with the mystery transactions are: 18qr2srETSvQq4kP7yBYRqQ4LzmjhtRmcD, 1MaZAHzEFfinRJ2dwK6YtNDfvWMBkiAxDr, 1AgwESN7RKNZtaqzbqu6kPg3RS6C2qCgHi, 1AZUPm5PC5QguquNsBg7HhWUYz5dfm2nU9, and 1J1aR7ayNp9sma8QVyyWGF87PzDU1vp5BD.
+
+
+Share
+25 comments:
+
+AnonymousFebruary 16, 2014 at 10:27 AM
+Fascinating as always.
+
+Reply
+
+Peter ToddFebruary 16, 2014 at 6:55 PM
+I thought the Electrum patch was very clever: the form of the transaction that was used to embed the patch in the blockchain also *triggers* the bug that it fixes: https://bitcointalk.org/index.php?topic=271761.msg2920116#msg2920116
+
+Reply
+
+AnonymousFebruary 16, 2014 at 7:34 PM
+So far I've read all your bitcoin posts with great pleasure, keep up the good work!
+
+Reply
+
+gmFebruary 16, 2014 at 7:39 PM
+The "hidden" message in the original block is an attempt to prove that it didn't exist before that date and hence that there was no pre-mining done.
+
+Reply
+
+AnonymousFebruary 16, 2014 at 9:42 PM
+In April 2013 someone uploaded load of links to ch1ld p0rn websites in bitcoin blockchain.
+
+http://www.btcpedia.com/ped0-links-in-bitcoin-blockchain/
+
+http://www.dailydot.com/business/bitcoin-child-porn-transaction-code/
+
+http://money.cnn.com/2013/05/02/technology/security/bitcoin-porn/index.html
+
+Reply
+
+AnonymousFebruary 16, 2014 at 10:02 PM
+Ken did you find any illegal images in your time looking through things? The possibility of someone being able to permanently, publicly store data is going to make the future a very interesting place.
+
+Reply
+
+JulianFebruary 16, 2014 at 10:46 PM
+I am a bit worried. Wouldn't this mean that it is possible to store data which is protected by a certain copyright? Making it illegal for some people in the world (USA and Germany for e.g.) to actually store the blockchain as it contains data which is protected? Stored for ever in the blockchain without the possibility to remove it.
+
+Reply
+
+AnonymousFebruary 18, 2014 at 10:46 AM
+Analyzing http://blockexplorer.com/rawtx/d29c9c0e8e4d2a9790922af73f0b8d51f0bd4bb19940d9cf910ead8fbe85bc9b, it looks like there is no limit to what size can be with OP_RETURN. Please confirm.
+
+If there is indeed upper limit of 80 bytes, then how come these transactions exceeding limit got accepted in the block?
+
+Reply
+
+CryptoGraffiti.infoMarch 24, 2014 at 6:52 AM
+Now there is a webpage for viewing addresses that have more information in them than just random: CryptoGraffiti.info.
+
+The main purpose of CryptoGraffiti.info is to display transactions which include addresses that have human readable characters in them. In addition, you can encode arbitrary text as Bitcoin addresses, import to wallet and send to blockchain.
+
+The page is in development and you can discuss and give feedback at https://bitcointalk.org/index.php?topic=524877.0
+
+Reply
+
+AnonymousMarch 25, 2014 at 4:04 AM
+Hi Ken,
+
+I enjoyed this! You might also be interested in coinsecrets.org which shows data embedded in the now-official way, using OP_RETURNs.
+
+GIdeon
+
+Reply
+
+AnonymousMay 16, 2014 at 10:46 PM
+The Valentine's messages were from this service: http://www.thenoteblock.com/
+
+Reply
+
+AnonymousJuly 17, 2014 at 11:51 PM
+The inclusion of copyrighted works would not make the blockchain illegal to use. It would be illegal for you to "use" those copyrighted works, or attempt to "sell them". Just as having a copyrighted work on the internet does not make it illegal for you to use the internet.
+
+You do not have to download the chain to use the chain. That is a nice thing to have.
+
+However, the "copyrighted works", are in parts, and would also require some form of "assembling". It is considered part of the "fair use act", to have portions of copyrighted works, where the complete works are not within direct use, in the copyrighted form. EG, Portions of the web contain portions of unseen copyrighted works, just by coincidence of randomness. Also, portions sum-up to whole works, through various sources, by way of backups and clouds.
+
+Ecrypt the number 1 and it could result in the entire sourcecode of apple's iphone. If it did, (highly unlikely), it would not make you a lawbreaker for having the number 1 on your keyboard or computer.
+
+Funny thing is, there is a copyrighted "prime number" that is a virus, if run as a program. There is also a prime number that executes and produces itself as a prime number. (However, that is a non-direct program which only works on a specific compiler that was made to find primes that execute themselves for self reproduction. Talk about inception-meets-the-matrix!)
+
+I think "tiny-virus" (which is also self-replicating, or it was morphing, was also hidden in the block-chain.)
+
+Reply
+
+AnonymousAugust 26, 2014 at 7:33 AM
+Can the the blockchain be used as a filesharing platform for videos, music, ebooks etc?
+
+Reply
+
+AnonymousJanuary 17, 2015 at 8:01 AM
+Cryptograffiti & paystamper do this automatically! But this is a great article!!
+
+Reply
+
+AnonymousJanuary 17, 2015 at 9:26 PM
+This is wonderful. How did you find all these things?!
+
+Reply
+
+Daniel WyattDecember 18, 2016 at 2:18 PM
+If you're interested in adding to the article, I found aaf6773116f0d626b7e66d8191881704b5606ea72612b07905ce34f6c31f0887 has lucifer-1.0.tar.gz (source code archive).
+
+Reply
+
+UnknownJanuary 20, 2017 at 12:31 PM
+This article was super helpful. I used what I learned here to build a website for viewing the messages.
+
+Here is BitLen http://bitcoinsays.com/930a2114cdaa86e1fac46d15c74e81c09eee1d4150ff9d48e76cb0697d8e1d72
+
+Here's a RickRoll http://bitcoinsays.com/d29c9c0e8e4d2a9790922af73f0b8d51f0bd4bb19940d9cf910ead8fbe85bc9b
+
+Reply
+
+Daniel WyattJanuary 20, 2017 at 6:07 PM
+David: Same here! (sorta) https://github.com/dewyatt/bitsee
+
+Reply
+
+AnonymousJuly 22, 2017 at 12:47 PM
+http://digitalcommons.augustana.edu/cscfaculty/1/
+
+Academic paper on data insertion in Bitcoin's blockchain.
+
+Reply
+
+DogeyipAugust 1, 2017 at 10:55 AM
+> How to put your own message in the blockchain...
+
+All the content on http://dogeyip.com/ is pulled from data encoded into UTXO on the dogecoin blockchain using a more robust implementation of this idea. If you're clever you can encode as much data as you want into any block chain using this technique. Obviously, the techniques used here can also be used on the bitcoin blockchain.
+
+Example: All the text for the blog posts here are pulled via api from data encoded into UTXOs in the dogecoin blockchain: http://dogeyip.com/blog.html
+
+Reply
+
+AnonymousAugust 21, 2018 at 1:53 PM
+Regarding this comment:
+
+<<<
+Anonymous Anonymous said...
+http://digitalcommons.augustana.edu/cscfaculty/1/
+
+Academic paper on data insertion in Bitcoin's blockchain.
+>>>
+
+The paper says:
+<<<
+For analysis of historical methods and testing each of the data insertion methods in this paper, we used the open-source Java library, BitcoinJ.
+>>>
+
+Does anyone know if the source code of the testing scripts is publicly available?
+
+Reply
+
+AnonymousNovember 7, 2018 at 1:31 AM
+Thank you for the content
+can you suggest some blockchain tools??
+
+https://socialprachar.com/career-in-blockchain/?ref=blogtrffic
+
+Reply
+
+Movie MahalNovember 7, 2018 at 9:04 PM
+This is wonderful. How did you find all these things?
+And Updated Here
+https://socialprachar.com/career-in-blockchain/
+
+Reply
+
+Dave ScoteseApril 11, 2019 at 9:29 PM
+Ken, this is great. Cryptograffiti is also great. I have been looking for something to counter the potential Mandela effect if a powerful enough force alters the blockchain. In "Contact," Carl Sagan pointed out that when government is spending the money, they might as well do everything twice because they have no bottom line. So they could run computing power parallel to and hidden from the world to generate their own blockchain and then deploy it with whatever differences they want, assuming they amassed enough computing power. Loads of people would complain that Bitcoin is messed up somehow. A large number of balances would be wrong. No one would know what happened because we all rely on the machines to remember and protect the "longest chain" under the assumption that we won't get 51% attacked.
+
+But this post gives human beings some incontrovertible expectations about the "real" blockchain - an image of Mandela himself! So beautiful.
+
+Thanks!
+
+Reply
+
+AnonymousMarch 31, 2021 at 10:55 AM
+"The inclusion of copyrighted works would not make the blockchain illegal to use."
+
+This is a matter of law and not scientifical reality. A law can be almost everything and a law can be changed.
+
+Reply
+Add comment
+
+
+‹
+›
+Home
+View web version

@@ -1,0 +1,89 @@
+./oclvanitygen++ -F compressed -Z 0000000000000000000000000000000000000000000000000000000000000000 -l $((256-69)) 19vkiEajfhuZ8bs8Zu2jg
+
+./vanitygen++ -P 
+
+./oclvanitygen++ -F compressed -Z 0000000000000000000000000000000000000000000000000000000000000000 -l $((256-135)) 16RGFo6h
+
+/oclvanitygen++ -F compressed -Z 0000000000000000000000000000000000000000000000000000000000000000 -l $((256-135)) 16RGFo6h
+Difficulty: 873388193410
+create thread!
+Pattern: 16RGFo6h                                                              
+Address: 16RGFo6hDtsP7pKJUULZX5ubp1C6y8jozM
+Privkey: KwDiBf89QgGbjEhKnhXJuH9E8kJnvXLgEE5XswYz7Cy8DVh6B9s8
+
+  "txid": "a798905f53fdcadcbd2e2a1e61d23ba69a07e26130a78c76da4bf4d7a170f383",
+  "size": 578,
+  "version": 1,
+  "locktime": 0,
+  "fee": 2806,
+  "inputs": [
+    {
+      "coinbase": false,
+      "txid": "547246e9fec52847f4710ec6d6a04673cbfb3eea7af6c04b79c433ce44059d25",
+      "output": 2,
+      "sigscript": "1600142780438f116c5aad42a1c4a24e704a9bbbd9253f",
+      "sequence": 4294967294,
+      "pkscript": "a914a1c3c9bc2b46859a40baf2d4831d952e562b26d087",
+      "value": 1200,
+      "address": "3GSMG24TujqfMJG1kQoBX18DzJHQLeJYMK",
+      "witness": [
+        "3045022100971d20eb51707091f398a9657078bddf64a611f9319c9e20f05b7ed5697c2f79022020819ecf4ed0aca209ad89c453ac9c046697f1efa43a516ce6f7d9864b04addc01",
+        "0205eaf779d2ba38eac770699b8f59ccbcf645ab6789ed481a53c1f8d2c489c04b"
+      ]
+    },
+    {
+      "coinbase": false,
+      "txid": "547246e9fec52847f4710ec6d6a04673cbfb3eea7af6c04b79c433ce44059d25",
+      "output": 1,
+      "sigscript": "1600142780438f116c5aad42a1c4a24e704a9bbbd9253f",
+      "sequence": 4294967294,
+      "pkscript": "a914a1c3c9bc2b46859a40baf2d4831d952e562b26d087",
+      "value": 1200,
+      "address": "3GSMG24TujqfMJG1kQoBX18DzJHQLeJYMK",
+      "witness": [
+        "304402205e8f445c8185e820e14d74f50506d95356b9b80e5d901b325dc6b4abf60cec650220011d5caa16e883dccd0294ddd98d1e0bcee18dc5ddca85f06ae308c0b59bad3201",
+        "0205eaf779d2ba38eac770699b8f59ccbcf645ab6789ed481a53c1f8d2c489c04b"
+      ]
+    },
+    {
+      "coinbase": false,
+      "txid": "547246e9fec52847f4710ec6d6a04673cbfb3eea7af6c04b79c433ce44059d25",
+      "output": 0,
+      "sigscript": "1600142780438f116c5aad42a1c4a24e704a9bbbd9253f",
+      "sequence": 4294967294,
+      "pkscript": "a914a1c3c9bc2b46859a40baf2d4831d952e562b26d087",
+      "value": 1106,
+      "address": "3GSMG24TujqfMJG1kQoBX18DzJHQLeJYMK",
+      "witness": [
+        "30440220702e4ce3382ff311b200437623fb957f18e9821cf5bf33acac3e4ffa195f9ce2022004e343c8555a2681bee44f8a36f8c3efc361a3d8c204dba4246f9d8aa0be184301",
+        "0205eaf779d2ba38eac770699b8f59ccbcf645ab6789ed481a53c1f8d2c489c04b"
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "address": null,
+      "pkscript": "6a0748616c76696e67",
+      "value": 0,
+      "spent": false,
+      "spender": null
+    },
+    {
+      "address": "1GSMG1JC9wtdSwfwApgj2xcmJPAwx7prBe",
+      "pkscript": "76a914a9553269572a317e39f0f518cb87c1a0ee1dbae488ac",
+      "value": 700,
+      "spent": true,
+      "spender": {
+        "txid": "2aa9a4a90be819d5122d70c993280785a0508f163521e7b38cebb4db0b071b13",
+        "input": 2
+      }
+    }
+  ],
+  "block": {
+    "height": 630001,
+    "position": 230
+  },
+  "deleted": false,
+  "time": 1589227370,
+  "rbf": false,
+  "weight": 1340

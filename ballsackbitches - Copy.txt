@@ -1,0 +1,392 @@
+Hash
+00000-8a904 
+Capacity
+121.00%
+Distance
+5y 0m 19d 0h 36m 45s
+BTC
+22,350.3934
+Value
+$194,682,431
+Value Today
+$2,335,739,036
+Average Value
+6.7831239421 BTC
+Median Value
+0.07585643 BTC
+Input Value
+22,351.76 BTC
+Output Value
+22,358.01 BTC
+Transactions
+3,295
+Witness Tx’s
+1,719
+Inputs
+5,280
+Outputs
+10,126
+Fees
+1.36908095 BTC
+Fees Kb
+0.0010790 BTC
+Fees kWU
+0.0003428 BTC
+Depth
+269,112
+Size
+1,268,805
+Version
+0x20000000
+Merkle Root
+d7-d8 
+Difficulty
+16,104,807,485,529.38
+Nonce
+3,717,080,195
+Bits
+387,021,369
+Weight
+3,993,342 WU
+Minted
+6.25 BTC
+Reward
+7.61908095 BTC
+Mined on
+May 11, 2020, 1:02:50 PM
+Height
+630,001
+Confirmations
+269,112
+Fee Range
+2-4,480 sat/vByte
+Average Fee
+0.00041550
+Median Fee
+0.00025538
+Miner
+Braiins
+Explore the full Bitcoin ecosystem
+Sign In
+Transaction
+2aa9a4a90be819d5122d70c993280785a0508f163521e7b38cebb4db0b071b13
+Timestamp	‎2020-05-11 13:02:50 (5 years ago)
+Features	SegWitRBF
+Fee	185,400 sats$17.27
+Fee rate	300 sat/vB
+Effective fee rate	198 sat/vBOverpaid 2x
+Miner	Logo of Braiins Pool mining pool Braiins Pool
+
+Flow
+
+Inputs & Outputs
+1GSMG1JC9wtdSwfwApgj2xcmJPAwx7prBe
+‎5.00000000 BTC
+ScriptSig (ASM)	
+OP_PUSHBYTES_72 3045022100dbe31ca9440892abcec35c0aa83380e1c35d2a33ea99fc314e6bcaf299b8847a022017a2531912ce634185f572357b49873764545d8703723002d3c3778e763e98dc01
+OP_PUSHBYTES_65 04f4d1bbd91e65e2a019566a17574e97dae908b784b388891848007e4f55d5a4649c73d25fc5ed8fd7227cab0be4e576c0c6404db5aa546286563e4be12bf33559
+ScriptSig (HEX)	483045022100dbe31ca9440892abcec35c0aa83380e1c35d2a33ea99fc314e6bcaf299b8847a022017a2531912ce634185f572357b49873764545d8703723002d3c3778e763e98dc014104f4d1bbd91e65e2a019566a17574e97dae908b784b388891848007e4f55d5a4649c73d25fc5ed8fd7227cab0be4e576c0c6404db5aa546286563e4be12bf33559
+nSequence	0xfffffffd
+Previous output script	OP_DUP
+OP_HASH160
+OP_PUSHBYTES_20 a9553269572a317e39f0f518cb87c1a0ee1dbae4
+OP_EQUALVERIFY
+OP_CHECKSIG
+Previous output type	P2PKH
+1GSMG1JC9wtdSwfwApgj2xcmJPAwx7prBe
+‎0.00000666 BTC
+ScriptSig (ASM)	
+OP_PUSHBYTES_72 3045022100fce22a0a026a33197ae65efa47420aa1c4efdbf95f8370f4da22802392ab2db20220193bbf54a6be9ef136eefee1dd17006e4d75558f7a26982c266825de2bae9bbe01
+OP_PUSHBYTES_65 04f4d1bbd91e65e2a019566a17574e97dae908b784b388891848007e4f55d5a4649c73d25fc5ed8fd7227cab0be4e576c0c6404db5aa546286563e4be12bf33559
+ScriptSig (HEX)	483045022100fce22a0a026a33197ae65efa47420aa1c4efdbf95f8370f4da22802392ab2db20220193bbf54a6be9ef136eefee1dd17006e4d75558f7a26982c266825de2bae9bbe014104f4d1bbd91e65e2a019566a17574e97dae908b784b388891848007e4f55d5a4649c73d25fc5ed8fd7227cab0be4e576c0c6404db5aa546286563e4be12bf33559
+nSequence	0xfffffffd
+Previous output script	OP_DUP
+OP_HASH160
+OP_PUSHBYTES_20 a9553269572a317e39f0f518cb87c1a0ee1dbae4
+OP_EQUALVERIFY
+OP_CHECKSIG
+Previous output type	P2PKH
+1GSMG1JC9wtdSwfwApgj2xcmJPAwx7prBe
+‎0.00000700 BTC
+ScriptSig (ASM)	
+OP_PUSHBYTES_71 30440220776706ca3039c2e127aff3f144333e9afc6c4dcf5ba2dd9243268324622d65f602202dae7fda100bf3567d813790ccb1837481a2852d3f74678120e0cd094fda0b9601
+OP_PUSHBYTES_65 04f4d1bbd91e65e2a019566a17574e97dae908b784b388891848007e4f55d5a4649c73d25fc5ed8fd7227cab0be4e576c0c6404db5aa546286563e4be12bf33559
+ScriptSig (HEX)	4730440220776706ca3039c2e127aff3f144333e9afc6c4dcf5ba2dd9243268324622d65f602202dae7fda100bf3567d813790ccb1837481a2852d3f74678120e0cd094fda0b96014104f4d1bbd91e65e2a019566a17574e97dae908b784b388891848007e4f55d5a4649c73d25fc5ed8fd7227cab0be4e576c0c6404db5aa546286563e4be12bf33559
+nSequence	0xfffffffd
+Previous output script	OP_DUP
+OP_HASH160
+OP_PUSHBYTES_20 a9553269572a317e39f0f518cb87c1a0ee1dbae4
+OP_EQUALVERIFY
+OP_CHECKSIG
+Previous output type	P2PKH
+1GSMG1JC9wtdSwfwApgj2xcmJPAwx7prBe
+‎2.49815966 BTC	
+ScriptPubKey (ASM)	OP_DUP
+OP_HASH160
+OP_PUSHBYTES_20 a9553269572a317e39f0f518cb87c1a0ee1dbae4
+OP_EQUALVERIFY
+OP_CHECKSIG
+ScriptPubKey (HEX)	76a914a9553269572a317e39f0f518cb87c1a0ee1dbae488ac
+Type	P2PKH
+17ucy1K9ZUAaoY6JVtM932W9jUp5LXfyHa
+‎2.50000000 BTC	
+ScriptPubKey (ASM)	OP_DUP
+OP_HASH160
+OP_PUSHBYTES_20 4bc468447fe1b048ad030a2f9a125478eabc4ed6
+OP_EQUALVERIFY
+OP_CHECKSIG
+ScriptPubKey (HEX)	76a9144bc468447fe1b048ad030a2f9a125478eabc4ed688ac
+Type	P2PKH
+
+Details
+Size	‎617 B
+Virtual size	‎617 vB
+Adjusted vsize	‎617 vB
+Weight	‎2.47 kWU
+Version	‎2
+Locktime	‎629,998
+Sigops	‎8
+Transaction hex	
+
+English
+
+USD
+
+UTC-7 - Mountain Standard Time (MST)
+
+BTC
+
+Classic
+Explore the full Bitcoin ecosystem®
+
+Explore
+
+Mining Dashboard
+
+Lightning Explorer
+
+Recent Blocks
+
+Broadcast Transaction
+
+Test Transaction
+
+Preview Transaction
+
+Connect to our Nodes
+
+API Documentation
+
+Learn
+
+What is a mempool?
+
+What is a block explorer?
+
+What is a mempool explorer?
+
+Why isn't my transaction confirming?
+
+Be your own explorer™
+
+More FAQs »
+
+Research
+
+Networks
+
+Testnet3 Explorer
+
+Testnet4 Explorer
+
+Signet Explorer
+
+Liquid Testnet Explorer
+
+Liquid Explorer
+
+Legal
+
+Terms of Service
+
+Privacy Policy
+
+Trademark Policy
+
+Third-party Licenses
+
+node206.va1.mempool.space (v3.3-dev) [4f2a0bd1][f7fd353d]
+
+
+05-30-2025
+Breaking News
+US bill elevates CFTC, but no one works there anymore
+Facebook
+Twitter
+Instagram
+YouTube
+Home page
+BSV
+$33.93
+Vol 25.46m
+-4.76%
+BTC
+$104453
+Vol 39000.01m
+-1.65%
+BCH
+$406.93
+Vol 200.8m
+-0.76%
+LTC
+$88.29
+Vol 594.93m
+-6.19%
+DOGE
+$0.19
+Vol 2282.95m
+-8.17%
+Home
+News
+News
+Business
+Tech
+Finance
+Editorial
+Interviews
+Events
+Videos
+Resources
+Resources
+Blockchain 101
+Bitcoin 101
+Bitcade
+Bitcade
+Wallets
+Exchanges
+Games
+Apps
+More
+More
+Market Cap
+About Us
+Meet the Team
+Contact Us
+Terms of Use
+Privacy Policy
+Cookie Notice
+Advertising
+Search Icon
+Search keyword
+Concept of private key in digital technology
+Tech
+Private key puzzles
+23 March, 2022
+By Xiaohui Liu
+Homepage
+>
+News
+>
+Tech
+>
+Private key puzzles
+
+This post was first published on Medium.
+
+We introduce a new type of Bitcoin smart contracts called private key puzzles, which can only be solved by providing the corresponding private key of a given public key.
+
+In previous contracts, only the possession of a private key needs to be proved in the form of digital signatures. The private key is not exposed and kept confidential. In contrast, the private key itself is disclosed in a private key puzzle.
+
+This can be used, for example, when Alice wants to pay Bob to watch a movie online. Bob can encrypt the movie with an ephemeral public key. Alice can get the corresponding private key if Bob redeems her payment locked in a private key puzzle, after which she can decrypt the movie.
+
+Nonce Reuse Attack on ECDSA
+
+To generate signatures, ECDSA takes a private key d, a random number k (called nonce), and the hash of a message h. r is the x-coordinate of the point k * G, where G is the generator.
+
+1st inline image from Cathy
+
+The signature is the pair (r, s).
+
+Problems arise when the same private key is used to sign different messages with the same nonce k. We will have two signatures (r, s1) and (r, s2). r is the same since k is the same.
+
+2nd inline from Cathy
+
+We can recover the nonce with:
+
+Nonce Reuse Attack on ECDSA
+
+We can recover the private key with:
+
+private key of Nonce Reuse Attack on ECDSA
+
+Sony PlayStation 3 is hacked by exploring this vulnerability. For this reason, it is crucial to select different k for different signatures.
+
+Private Key Puzzles
+
+We turn the vulnerability on its head and use it to expose a private key indirectly. We intentionally demand two valid signatures over two different messages signed using the same private key and nonce, as shown below.
+
+contract PrivateKeyPuzzle {
+    PubKey pubKey;
+
+    // extract r from DER-encoded signature
+    static function extractRFromSig(Sig sig) : bytes {
+        int rlen = unpack(sig[3 : 4]);
+        return sig[4 : 4 + rlen];
+    }
+
+    public function unlock(Sig sig1, Sig sig2) {
+        require(checkSig(sig1, this.pubKey));
+        // ensure signed messages are different option (1): insert CODESEPERATOR in between two checkSigs
+        ***
+        require(checkSig(sig2, this.pubKey));
+
+        // sign with same r, thus same ephemeral key k
+        require(extractRFromSig(sig1) == extractRFromSig(sig2));
+    }
+}
+view rawPrivateKeyPuzzle1.js hosted with ❤ by GitHub
+Contract PrivateKeyPuzzle
+
+We validate two signatures are for the same public key and thus private key, at Line 11 and 14. Function extraRFromSig() at Line 5 allows us to retrieve r from a signature, DER-encoded as below.
+
+same r and thus k is used in two signatures
+
+Line 17 ensures the same r and thus k is used in two signatures.
+
+The message signed is called a sighash preimage. Note that we insert an OP_CODESEPARATOR at Line 13 to ensure two messages signed are different, since they have distinct scriptCode (part 5 of a sighash preimage).
+
+There are other ways to ensure signed messages are different. For instance, we can use different sighash flags (part 10 of a sighash preimage) when signing.
+
+  // extract SIGHASH flag from DER-encoded signature
+    static function extractSighashFlagFromSig(Sig sig) : SigHashType {
+        int len = len(sig);
+        return SigHashType(sig[len - 2 : ]);
+    }
+
+    public function unlock(Sig sig1, Sig sig2) {
+        require(checkSig(sig1, this.pubKey));
+        require(checkSig(sig2, this.pubKey));
+
+        // ensure signed messages are different option (2): use different sighash flags
+        require(extractSighashFlagFromSig(sig1) == (SigHash.NONE | SigHash.FORKID));
+        require(extractSighashFlagFromSig(sig2) != (SigHash.NONE | SigHash.FORKID));
+
+        // sign with same r, thus same ephemeral key k
+        require(extractRFromSig(sig1) == extractRFromSig(sig2));
+    }
+view rawPrivateKeyPuzzle2.js hosted with ❤ by GitHub
+Contract PrivateKeyPuzzle
+
+sig1 uses NONE and excludes transaction outputs from message signed, while sig2 includes it and is thus different.
+
+Alternative Implementations
+
+There are other ways to force disclosing of a private key:
+
+Directly use elliptic curve point multiplication to verify public key equals d * G
+Use the OP_PUSH_TX technique to verify the private and public key are a pair.
+Private key puzzles are much more compact and efficient than them.
+
+Acknowledgements
+
+This article adapts idea from the paper Bitcoin private key locked transactions.
